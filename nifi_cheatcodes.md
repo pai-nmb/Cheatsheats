@@ -11,3 +11,6 @@ This [**Confluence space**](https://cwiki.apache.org/confluence/display/NIFI/Exa
 
 Author: Jennifer Barnabee
 
+# Jython guide for Nifi 
+### BOOK : [Python for the Java Platform](https://jython.readthedocs.io/en/latest/)
+Authors:	Josh Juneau, Jim Baker, Victor Ng, Leo Soto, Frank Wierzbicki
