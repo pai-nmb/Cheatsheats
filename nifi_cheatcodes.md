@@ -57,6 +57,7 @@ class PyStreamCallback(StreamCallback):
     def __init__(self, flowfile):
         self.ff = flowfile
         pass
+
     def process(self, inputStream, outputStream):
         text = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
         inputDict = json.loads(text)
@@ -107,6 +108,7 @@ from org.apache.nifi.processor.io import StreamCallback
 class PyStreamCallback(StreamCallback):
     def __init__(self, flowfile):
         self.ff = flowfile
+        pass
 
     def process(self, inputStream, outputStream):
         text = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
