@@ -9,3 +9,5 @@ DELETE FROM opcua_data.test_server_data
 DELETE FROM opcua_data.test_server_data
 WHERE time < NOW() - INTERVAL '1 day';
 ```
+
+

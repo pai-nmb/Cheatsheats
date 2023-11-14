@@ -136,6 +136,68 @@ if (flowFile != None):
     session.transfer(flowFile, REL_SUCCESS)
 ```
 
+
+## To send each signals to separate rows in database - Type C
+
+UT501P
+Output format: 
+All signals in a separate values
+```
+21.6
+26.4000
+28.4
+1695374614
+```
+
+Corresponding script body,
+```
+######## Rösler ########
+import json
+import datetime
+
+from org.apache.commons.io import IOUtils
+from java.nio.charset import StandardCharsets
+from org.apache.nifi.processor.io import StreamCallback
+
+class PyStreamCallback(StreamCallback):
+    def __init__(self, flowfile):
+        self.ff = flowfile
+
+    def process(self, inputStream, outputStream):
+        text = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
+        inputDict = json.loads(text)
+        
+        # Prepare a list of JSON objects for each signal
+        json_objects = []
+
+        keys = list(inputDict.keys())
+        
+        # Skip the first key, assuming it's not a numeric key
+        keys = keys[1:]
+
+        for key in keys:
+            opc_path = "ns=4;i=" + key  # Construct the opc_path using the key
+            value = inputDict[key]
+            row = {
+                "opc_path": opc_path,
+				"time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f"),
+                "asset": "Rosler",
+                "value": float(value["value"])
+            }
+            json_objects.append(row)
+
+        # Serialize the list of JSON objects to a single JSON string
+        aggregated_json = json.dumps(json_objects, indent=4)
+        
+        outputStream.write(bytearray(aggregated_json.encode('utf-8')))
+
+flowFile = session.get()
+if (flowFile != None):
+    flowFile = session.write(flowFile, PyStreamCallback(flowFile))
+    session.transfer(flowFile, REL_SUCCESS)
+```
+
+
 ## Aggregation 
 
 ### Type A (aggregating signals in a single json)
